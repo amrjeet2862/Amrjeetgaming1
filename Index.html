@@ -3,25 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>मेरी वेबसाइट</title>
+    <title>एडवांस्ड साइंटिफिक कैलकुलेटर</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --accent-color: #ea4335;
+            --text-color: #202124;
+            --bg-color: #f8f9fa;
+            --calc-bg: #ffffff;
+            --btn-bg: #f1f3f4;
+            --btn-hover: #e8eaed;
         }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         h1 {
-            color: #0066cc;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .calculator-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--calc-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .calculator-display {
+            width: 100%;
+            height: 100px;
+            padding: 20px;
+            background: #202124;
+            color: white;
+            text-align: right;
+            font-size: 2rem;
+            border: none;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .previous-operand {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            min-height: 24px;
+        }
+
+        .current-operand {
+            font-size: 2.5rem;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #dadce0;
+        }
+
+        .calculator-btn {
+            height: 80px;
+            font-size: 1.2rem;
+            border: none;
+            outline: none;
+            background: var(--btn-bg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calculator-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        .calculator-btn.operator {
+            background: #dadce0;
+            font-weight: bold;
+        }
+
+        .calculator-btn.function {
+            background: #f1f3f4;
+        }
+
+        .calculator-btn.equals {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .calculator-btn.clear {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .span-2 {
+            grid-column: span 2;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #5f6368;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .calculator-btn {
+                height: 70px;
+                font-size: 1rem;
+            }
+            
+            .calculator-display {
+                height: 80px;
+                font-size: 1.5rem;
+                padding: 15px;
+            }
+            
+            .previous-operand {
+                font-size: 0.8rem;
+            }
+            
+            .current-operand {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>मेरी पहली वेबसाइट</h1>
-    <p>यह GitHub Pages पर होस्ट की गई मेरी वेबसाइट है!</p>
-    
-    <!-- अपना कैलकुलेटर कोड यहां पेस्ट करें -->
+    <header>
+        <h1>वैज्ञानिक कैलकुलेटर</h1>
+        <p>GitHub Pages पर होस्टेड</p>
+    </header>
+
+    <div class="calculator-container">
+        <div class="calculator-display">
+            <div class="previous-operand" id="previous-operand"></div>
+            <div class="current-operand" id="current-operand">0</div>
+        </div>
+        <div class="calculator-buttons">
+            <button class="calculator-btn clear" onclick="clearAll()">AC</button>
+            <button class="calculator-btn function" onclick="deleteLastChar()">DEL</button>
+            <button class="calculator-btn function" onclick="appendOperator('%')">%</button>
+            <button class="calculator-btn operator" onclick="appendOperator('/')">/</button>
+            
+            <button class="calculator-btn" onclick="appendNumber('7')">7</button>
+            <button class="calculator-btn" onclick="appendNumber('8')">8</button>
+            <button class="calculator-btn" onclick="appendNumber('9')">9</button>
+            <button class="calculator-btn operator" onclick="appendOperator('*')">×</button>
+            
+            <button class="calculator-btn" onclick="appendNumber('4')">4</button>
+            <button class="calculator-btn" onclick="appendNumber('5')">5</button>
+            <button class="calculator-btn" onclick="appendNumber('6')">6</button>
+            <button class="calculator-btn operator" onclick="appendOperator('-')">-</button>
+            
+            <button class="calculator-btn" onclick="appendNumber('1')">1</button>
+            <button class="calculator-btn" onclick="appendNumber('2')">2</button>
+            <button class="calculator-btn" onclick="appendNumber('3')">3</button>
+            <button class="calculator-btn operator" onclick="appendOperator('+')">+</button>
+            
+            <button class="calculator-btn span-2" onclick="appendNumber('0')">0</button>
+            <button class="calculator-btn" onclick="appendNumber('.')">.</button>
+            <button class="calculator-btn equals" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 वैज्ञानिक कैलकुलेटर | GitHub Pages पर होस्टेड</p>
+    </footer>
+
+    <script>
+        let currentOperand = '0';
+        let previousOperand = '';
+        let operation = undefined;
+        let resetScreen = false;
+
+        const currentOperandElement = document.getElementById('current-operand');
+        const previousOperandElement = document.getElementById('previous-operand');
+
+        function updateDisplay() {
+            currentOperandElement.innerText = currentOperand;
+            previousOperandElement.innerText = previousOperand;
+        }
+
+        function appendNumber(number) {
+            if (currentOperand === '0' || resetScreen) {
+                currentOperand = '';
+                resetScreen = false;
+            }
+            if (number === '.' && currentOperand.includes('.')) return;
+            currentOperand += number;
+            updateDisplay();
+        }
+
+        function appendOperator(operator) {
+            if (currentOperand === '') return;
+            if (previousOperand !== '') {
+                calculate();
+            }
+            operation = operator;
+            previousOperand = `${currentOperand} ${operation}`;
+            currentOperand = '';
+            updateDisplay();
+        }
+
+        function calculate() {
+            let computation;
+            const prev = parseFloat(previousOperand);
+            const current = parseFloat(currentOperand);
+            
+            if (isNaN(prev) || isNaN(current)) return;
+            
+            switch (operation) {
+                case '+':
+                    computation = prev + current;
+                    break;
+                case '-':
+                    computation = prev - current;
+                    break;
+                case '*':
+                    computation = prev * current;
+                    break;
+                case '/':
+                    computation = prev / current;
+                    break;
+                case '%':
+                    computation = prev % current;
+                    break;
+                default:
+                    return;
+            }
+            
+            currentOperand = computation.toString();
+            operation = undefined;
+            previousOperand = '';
+            resetScreen = true;
+            updateDisplay();
+        }
+
+        function clearAll() {
+            currentOperand = '0';
+            previousOperand = '';
+            operation = undefined;
+            updateDisplay();
+        }
+
+        function deleteLastChar() {
+            if (currentOperand.length === 1) {
+                currentOperand = '0';
+            } else {
+                currentOperand = currentOperand.slice(0, -1);
+            }
+            updateDisplay();
+        }
+
+        // कीबोर्ड सपोर्ट
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
+            else if (e.key === '.') appendNumber('.');
+            else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/' || e.key === '%') 
+                appendOperator(e.key);
+            else if (e.key === 'Enter' || e.key === '=') calculate();
+            else if (e.key === 'Escape') clearAll();
+            else if (e.key === 'Backspace') deleteLastChar();
+        });
+    </script>
 </body>
-</html>
+    </html>
